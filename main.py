@@ -1,3 +1,45 @@
+def juurdekasv(rida, a_juurdekasv):
+    # Funktsioon arvutab metsapinna juurdekasvu põhinedes
+    # rea väärtusel (aakrite arv) ja aastasel juurdekasvul
+    # teisendab aakrid hektariteks (1 aakr ≈ 0.4047 ha),
+    # korrutab aastase juurdekasvu hektari kohta
+    # ning ümardab tulemuse kahe komakohani.
+    answer = round(rida * 0.4047 * a_juurdekasv, 2)
+    return answer  # Tagastame arvutatud väärtuse
+
+def main():
+    # Küsi kasutajalt faili nime, kust lugeda aakrite andmed
+    fail = str(input("Sisesta failinimi: "))
+    # Loendur, mis hakkab lugema, mitu metsatükki arvesse võetakse
+    arvesse = 0
+    # Küsi kasutajalt aastane juurdekasv hektari kohta (tihumeetrites)
+    a_juurdekasv = float(input("Sisestage aastane juurdekasv hektari kohta tihumeetrites: "))
+    # Küsi piirväärtus: ainult suuremad metsatükid kui antud aakripiir arvesse võtta
+    piir = int(input("Sisestage piir, mitmest aakrist suuremad metsatükid arvesse võtta: "))
+
+    # Ava fail lugemiseks UTF-8 kodeeringus
+    with open(fail, "r", encoding="utf-8") as file:
+    
+        # Itereerime läbi iga rea failis
+        for rida in file:
+            # Eemalda reavahetus ja üleliigsed tühikud
+            rida = rida.strip()
+            # Konverteeri rida stringist ujukomaarvuks
+            rida = float(rida)
+            if rida > piir:
+                # Arvuta juurdekasv ja prindi tulemus
+                print(juurdekasv(rida, a_juurdekasv))
+                # Suurenda arvesse-võetud tükkide loendurit
+                arvesse += 1
+            else:
+                print("Metsatükki ei võeta arvesse")
+        
+    print(f"Võeti arvesse {arvesse} metsatükki")
+                
+if __name__ == "__main__":
+    main()
+
+
 1. Muutujad ja Andmetüübid
 
 # Muutuja loomine ja andmetüübid
