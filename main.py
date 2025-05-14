@@ -517,3 +517,165 @@ class Õpilane(Inimene):
 õpilane1 = Õpilane("Mari", 17, "Tallinna Gümnaasium")
 print(õpilane1.info())  # Prindib täiustatud info koos kooli nimega
 print(õpilane1)        # Prindib objekti info __str__ meetodi abil
+
+**4.3. Sõnastikud (dictionaries)**
+
+```python
+# Näide: võtme–väärtuse paaride kogum
+õpilased = {
+    "Mari": 19,
+    "Juku": 21,
+    "Kaidi": 18
+}
+
+# 1) Elemendi lisamine või muutmine
+õpilased["Malle"] = 20        # lisame uue kirje
+õpilased["Juku"] = 22         # muudame olemasolevat
+
+# 2) Väärtuse lugemine
+vanus = õpilased["Mari"]      # 19
+# turvaline lugemine get()-iga, et vältida KeyError’it
+surname = õpilased.get("Peeter", "Pole andmeid")
+
+# 3) Elemendi eemaldamine
+õpilased.pop("Kaidi")         # eemaldab võtme "Kaidi" ja tagastab tema vanuse
+
+# 4) Iteratsioon võtmete ja väärtuste üle
+for nimi, vanus in õpilased.items():
+    print(nimi, "on", vanus, "aastat vana")
+
+# 5) Võtmete / väärtuste nimekirjad
+võtmed = list(õpilased.keys())
+väärtused = list(õpilased.values())
+
+# 6) Dictionary comprehension
+ruut = {i: i * i for i in range(1, 6)}
+print(ruut)  # {1:1, 2:4, 3:9, 4:16, 5:25}
+```
+
+# Sõnastikud – CHEAT SHEET
+
+1. **Sõnastiku loomine**
+
+   ```python
+   tühisõnastik = {}
+   andmed = {"võti1": "väärtus1", "võti2": 42}
+   ```
+2. **Elemendi lisamine / muutmine**
+
+   ```python
+   andmed["uus_võti"] = "uus_väärtus"
+   ```
+3. **Väärtuse lugemine**
+
+   ```python
+   x = andmed["võti1"]
+   y = andmed.get("puudub", None)
+   ```
+4. **Elemendi eemaldamine**
+
+   ```python
+   väärtus = andmed.pop("võti2", "vaikimisi")
+   ```
+5. **Itereerimine**
+
+   ```python
+   for võti in andmed:
+       print(võti, andmed[võti])
+   for võti, väärtus in andmed.items():
+       …
+   ```
+6. **Põhilised meetodid**
+
+   * `keys()`, `values()`, `items()`
+   * `get(võti[, vaikimisi])`
+   * `update( teine_sõnastik )`
+   * `clear()`
+7. **Comprehension**
+
+   ```python
+   uus = {x: f(x) for x in algne_list if tingimus(x)}
+   ```
+
+---
+
+**4.4. Kahemõõtmeline loend (maatriks)**
+
+```python
+# Maatriks – loendide loend (3×3 näide)
+maatriks = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+# 1) Ligipääs elemendile [rida][veerg]
+print(maatriks[1][2])   # 6
+
+# 2) Läbikäik pesastatud tsüklitega
+for rida in maatriks:
+    for element in rida:
+        print(element, end=" ")
+    print()
+
+# 3) Indeksitega läbikäik (vajalik transponeerimiseks)
+for i in range(len(maatriks)):
+    for j in range(len(maatriks[0])):
+        print(f"({i},{j}) =", maatriks[i][j])
+
+# 4) Transponeerimine list-comprehension’iga
+transp = [
+    [maatriks[r][c] for r in range(len(maatriks))]
+    for c in range(len(maatriks[0]))
+]
+print(transp)  # [[1,4,7],[2,5,8],[3,6,9]]
+```
+
+# Maatriks – CHEAT SHEET
+
+1. **Maatriksi loomine**
+
+   ```python
+   m = [
+       [a11, a12, …, a1n],
+       …,
+       [am1, am2, …, amn]
+   ]
+   ```
+2. **Elemendi ligipääs**
+
+   ```python
+   väärtus = m[rida][veerg]
+   ```
+3. **Pesastatud tsüklid**
+
+   ```python
+   for rida in m:
+       for x in rida:
+           …
+   ```
+4. **Indeksitega tsüklid**
+
+   ```python
+   for i in range(len(m)):
+       for j in range(len(m[0])):
+           …
+   ```
+5. **Transponeerimine**
+
+   ```python
+   T = [[m[r][c] for r in range(ridade_aru)] for c in range(veergude_aru)]
+   ```
+6. **Maatriksi initsialiseerimine**
+
+   ```python
+   # nt 5×5 null-matriks
+   nullm = [[0 for _ in range(5)] for _ in range(5)]
+   ```
+7. **Tabeli väljatrükk**
+
+   ```python
+   for rida in m:
+       print(*rida)
+   ```
+
