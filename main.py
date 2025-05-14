@@ -40,6 +40,67 @@ if __name__ == "__main__":
     main()
 
 
+```python
+def lugemise_aeg(lk_arv, kirjasuurus):
+    """
+    Arvutab lugemiseks kuluva aja sekundites antud
+    lehekülgede arvu ja kirjastiili suuruse põhjal.
+    """
+    if kirjasuurus == "väike":
+        # Väikese kirjastiili puhul kulub 40 sekundit lehekülje lugemiseks
+        return lk_arv * 40
+    elif kirjasuurus == "keskmine":
+        # Keskmise kirjastiili puhul kulub 30 sekundit lehekülje lugemiseks
+        return lk_arv * 30
+    elif kirjasuurus == "suur":
+        # Suure kirjastiili puhul kulub 20 sekundit lehekülje lugemiseks
+        return lk_arv * 20
+    else:
+        # Kui sisend ei vasta ühelegi eeldatud kirjastiili suurusele,
+        # tagastame 0 (või võiks tõsta erandi)
+        return 0
+
+
+def main():
+    # Küsi kasutajalt faili nime, kus on reas üks raamatu lehekülgede arv
+    fail = input("Sisesta faili nimi: ")
+    kokku = 0  # Muutuja lugemisele kuluvate sekundite summaks
+
+    # Avame faili ja tagame, et see suletakse automaatselt pärast lugemist
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            # Eemaldame rea algusest ja lõpust tühikud ning reavahetuse
+            rida = rida.strip()
+            if not rida:
+                # Jätame tühjad read vahele
+                continue
+
+            # Teisendame loetud rea täisarvuks (lehekülgede arv)
+            lk_arv = int(rida)
+
+            # Küsimus kasutajalt, millise suurusega on raamatu kirjasuurus
+            kirjasuurus = input(f"Raamat on {lk_arv} lk. Kui suur on kirjastiil (väike/keskmine/suur)? ")
+
+            # Lisame selle raamatu lugemisele kuluva aja koguajale
+            kokku += lugemise_aeg(lk_arv, kirjasuurus)
+
+    # Arvutame koguse sekunditest ümber tundideks, minutiteks ja sekunditeks
+    total_seconds = kokku
+    tunnid = total_seconds // 3600
+    ülejäänud = total_seconds % 3600
+    minutid = ülejäänud // 60
+    sekundid = ülejäänud % 60
+
+    # Väljastame kokkuvõtte lugemisajast
+    print(f"Kokku kulub raamatute lugemiseks {tunnid} tundi, {minutid} minutit ja {sekundid} sekundit.")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+
+
 1. Muutujad ja Andmetüübid
 
 # Muutuja loomine ja andmetüübid
