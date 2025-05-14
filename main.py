@@ -597,6 +597,62 @@ print(ruut)  # {1:1, 2:4, 3:9, 4:16, 5:25}
    uus = {x: f(x) for x in algne_list if tingimus(x)}
    ```
 
+# Sõnastik, kus iga mängija nime all on tema voorude tulemuste list
+tulemused = {
+    'Mari':  [2,  4,  5,  '-', 1, 4],
+    'Juku':  [1,  3,  2,   7,  8, '-'],
+    'Malle': ['-', 2,  '-', 3,  2, 5],
+    'Kalle': [4,  6,  '-', '-', 2, '-']
+}
+
+# 1) Lihtne läbikäik sõnastiku ja listide sees
+for nimi, voorud in tulemused.items():
+    print(nimi, "tulemused on", voorud)
+
+# Väljund:
+# Mari tulemused on [2, 4, 5, '-', 1, 4]
+# Juku tulemused on [1, 3, 2, 7, 8, '-']
+# ...
+
+# 2) Täpne ligipääs: antud mängija antud voor
+mängija = 'Malle'
+vooru_nr = 3   # tähele: indeks 0 = esimene voor
+vaartus = tulemused[mängija][vooru_nr]
+print(f"{mängija}, voor {vooru_nr+1} tulemus:", vaartus)
+# Malle, voor 4 tulemus: 3
+
+# 3) „Maatriksina“: võtame sõnastiku väärtuste listid ja paneme need uude listi
+maatriks = list(tulemused.values())
+# nüüd maatriks on:
+# [
+#   [2, 4, 5, '-', 1, 4],
+#   [1, 3, 2, 7, 8, '-'],
+#   ['-', 2, '-', 3, 2, 5],
+#   [4, 6, '-', '-', 2, '-']
+# ]
+
+# 4) Läbikäik maatriksina (pesastatud tsüklid)
+for rida in maatriks:
+    for el in rida:
+        print(el, end=" ")
+    print()
+# Väljatrükk ridadena, kus iga rida kuulub erinevale mängijale
+
+# 5) Transponeerimine: et saada voorude kaupa ridad
+transponeeritud = [
+    [rida[i] for rida in maatriks]
+    for i in range(len(maatriks[0]))
+]
+# transposeeritud[0] = [2,1,'-',4]  → 1. voor kõigi mängijate tulemused
+
+# 6) Võtme järgi matrixi muutmine või uue maatriksi salvestamine
+# Näiteks muuta puudunud voorud („-“) väärtuseks 0:
+puhastatud = {
+    nimi: [0 if t == '-' else t for t in voorud]
+    for nimi, voorud in tulemused.items()
+}
+
+
 ---
 
 **4.4. Kahemõõtmeline loend (maatriks)**
