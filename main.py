@@ -99,6 +99,124 @@ if __name__ == "__main__":
     main()
 ```
 
+def loe_seis(fail):
+    """
+    Loeb faili, kus iga reas on: Nimi p1 p2 p3 …
+    Tagastab sõnastiku kujul {nimi: [p1, p2, p3, …], …}.
+    """
+    seis = {}
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            rida = rida.strip()           # eemalda tühikud ja reavahetus
+            if not rida:
+                continue                  # jäta tühjad read vahele
+
+            osad = rida.split()           # jagame nimeks ja punktideks
+            nimi = osad[0]                # esimene osa = mängija nimi
+            # ülejäänud osad teisendame täisarvudeks ja salvestame listi
+            punktid = [int(x) for x in osad[1:]]  
+            seis[nimi] = punktid          # lisa sõnastikku
+    return seis
+
+
+def lisa_tulemus(nimi, seis, tulemus):
+    """
+    Lisab mängijale `nimi` sõnastikus `seis` uue punktisumma `tulemus`.
+    """
+    if nimi in seis:
+        seis[nimi].append(tulemus)     # lisa listi lõppu
+        print(f"Tulemus lisatud: {nimi} → {seis[nimi]}")
+    else:
+        print("Sellist mängijat ei ole sõnastikus!")
+
+
+def leia_keskmine(nimi, seis):
+    """
+    Arvutab ja tagastab mängija `nimi` keskmise skoori sõnastikus `seis`.
+    """
+    punktid = seis.get(nimi)
+    if not punktid:
+        print("Mängijat pole!")        # turvalisus, kui nimi puudub
+        return None
+    # Keskmine = punktide summa jagatud arvu elementidega
+    return sum(punktid) / len(punktid)
+
+
+def leia_parim(seis):
+    """
+    Leiab ja väljastab mängija, kellel on suurim keskmine skoor.
+    """
+    if not seis:
+        print("Andmed puuduvad.")
+        return
+
+    parim_nimi = None
+    parim_keskmine = -1.0
+
+    # Käime üle kõik mängijad ja arvutame nende keskmise
+    for nimi in seis:
+        km = leia_keskmine(nimi, seis)
+        if km is not None and km > parim_keskmine:
+            parim_keskmine = km
+            parim_nimi = nimi
+
+    # Väljastame tulemuse ühe komakohaga
+    print(f"Parim keskmine on {parim_nimi} → {parim_keskmine:.1f}")
+
+
+def main():
+    fail = "punktid.txt"
+    # 1) Loeme algandmed faili coroutine loe_seis abil
+    seis = loe_seis(fail)
+
+    while True:
+        # 2) Kuvame kasutajale lihtsa menüü
+        print("\n=== Menüü ===")
+        print("1 - Kuvan punktitabeli")
+        print("2 - Lisa tulemus")
+        print("3 - Leia mängija keskmine")
+        print("4 - Leia parim mängija")
+        print("5 - Salvesta ja lõpeta")
+        valik = input("Vali tegevus: ").strip()
+
+        if valik == "1":
+            # näitame kõiki mängijaid ja nende punktid riduena
+            for nimi, punktid in seis.items():
+                print(nimi, *punktid)
+
+        elif valik == "2":
+            # küsime nime ja uue punktili
+            nimi = input("Sisesta nimi: ").strip()
+            tulemus = int(input("Sisesta uus tulemus: ").strip())
+            lisa_tulemus(nimi, seis, tulemus)
+
+        elif valik == "3":
+            # küsime nime ja arvutame tema keskmise
+            nimi = input("Sisesta nimi: ").strip()
+            km = leia_keskmine(nimi, seis)
+            if km is not None:
+                print(f"{nimi} keskmine skoor on {km:.1f}")
+
+        elif valik == "4":
+            # leiame parima keskmise
+            leia_parim(seis)
+
+        elif valik == "5":
+            # 3) Salvesta muudetud tabel tagasi faili
+            with open(fail, "w", encoding="utf-8") as f:
+                for nimi, punktid in seis.items():
+                    # liidame nime ja punktid üheks realoendi stringiks
+                    rida = nimi + " " + " ".join(str(x) for x in punktid)
+                    f.write(rida + "\n")
+            print("Andmed salvestatud. Programm lõpetab töö.")
+            break
+
+        else:
+            print("Tundmatu valik, proovi uuesti.")
+
+
+if __name__ == "__main__":
+    main()
 
 
 1. Muutujad ja Andmetüübid
