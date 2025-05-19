@@ -1,3 +1,79 @@
+class Sportlane:
+    def __init__(self, nimi, kaal):
+        # Konstruktor: seadistab sportlase nime ja kaalu
+        self.nimi = nimi             
+        self.kaal = kaal
+        
+    def __str__(self):
+        # Tagastab objekti tekstilise kujutise printimiseks
+        return "Nimi: " + self.nimi + ", kaal: " + str(self.kaal) + " kg"
+
+
+class Maadleja(Sportlane):
+    def __init__(self, nimi, kaal):
+        # Kutsub baasklassi konstruktorit, et seadistada nimi ja kaal
+        super().__init__(nimi, kaal)
+        # Määrame automaatselt kaalukategooria kaalu alusel
+        if   kaal <= 55:
+            self.kaalukategooria = "kärbsekaal"
+        elif kaal <= 66:
+            self.kaalukategooria = "kergekaal"
+        elif kaal <= 84:
+            self.kaalukategooria = "keskkaal"
+        elif kaal <= 96:
+            self.kaalukategooria = "poolraskekaal"
+        else:
+            self.kaalukategooria = "raskekaal"
+        
+    def muuda_kaalu(self, uus_kaal):
+        # Uuendab maadleja kaalu ja arvutab kategooria uuesti
+        self.kaal = uus_kaal
+        
+        if   uus_kaal <= 55:
+            self.kaalukategooria = "kärbsekaal"
+        elif uus_kaal <= 66:
+            self.kaalukategooria = "kergekaal"
+        elif uus_kaal <= 84:
+            self.kaalukategooria = "keskkaal"
+        elif uus_kaal <= 96:
+            self.kaalukategooria = "poolraskekaal"
+        else:
+            self.kaalukategooria = "raskekaal"
+        
+    def __str__(self):
+        # Laiendab stringiesitust ka kaalukategooriaga
+        return (
+            "Nimi: " + self.nimi +
+            ", kaal: " + str(self.kaal) + " kg, " +
+            "kaalukategooria: " + self.kaalukategooria
+        )
+    
+
+# Näide klasside kasutamisest:
+
+sportlane = Sportlane("Indrek", 105)
+print(sportlane)  
+# Väljastab: Nimi: Indrek, kaal: 105 kg
+
+maadleja1 = Maadleja("Georg", 83)
+print(maadleja1)  
+# Väljastab: Nimi: Georg, kaal: 83 kg, kaalukategooria: keskkaal
+
+maadleja2 = Maadleja("Kristjan", 115)
+print(maadleja2)  
+# Väljastab: Nimi: Kristjan, kaal: 115 kg, kaalukategooria: raskekaal
+
+# Muudame Kristjani kaalu ja arvutame kategooria uuesti
+maadleja2.muuda_kaalu(95)
+print()          
+print(maadleja2)  
+# Nüüd: Nimi: Kristjan, kaal: 95 kg, kaalukategooria: poolraskekaal
+
+
+
+
+
+
 class Tont:
     def __init__(self, nimi, vanus, elukoht):
         # Konstruktor, mis seab iga uue Tont-objekti põhiväljad
