@@ -1,3 +1,59 @@
+class Tont:
+    def __init__(self, nimi, vanus, elukoht):
+        # Konstruktor, mis seab iga uue Tont-objekti põhiväljad
+        self.nimi = nimi               # Tont’i nimi
+        self.vanus = vanus             # Tont’i vanus
+        self.elukoht = elukoht         # Tont’i elukoht
+        
+    def kummita(self):
+        # Meetod, mis tagastab sõnumi: kes kummitab ja kus
+        return self.nimi + " kummitab elukohas " + self.elukoht + "!"
+
+    def __str__(self):
+        # Eriline meetod, mis määrab objekti tekstilise esituse printimisel
+        return (
+            "Nimi: " + self.nimi +
+            ", Vanus: " + str(self.vanus) +
+            ", Elukoht: " + self.elukoht
+        )
+    
+
+class Võlur(Tont):
+    def __init__(self, nimi, vanus, elukoht, nõiu):
+        # Kutsub baasklassi Tont konstruktorit, et initsialiseerida
+        # nimi, vanus ja elukoht
+        super().__init__(nimi, vanus, elukoht)
+        self.nõiu = nõiu             # Täiendav väli: kellele nõidus tehti
+        
+    def nõidus(self):
+        # Meetod, mis kirjeldab nõiduse kasutamist
+        return (
+            self.nimi + " pani nõiduse, millega sai pihta " +
+            self.nõiu + "!"
+        )
+        
+        
+# Näited klasside kasutamisest:
+
+tont = Tont("Norbert", 31, "Tartu")
+print(tont)             # Printerdatakse __str__ meetodi tagastus
+print(tont.kummita())   # Printerdame kummitusteate
+
+võlur1 = Võlur("Harry", 17, "Tartu", "Snape")
+võlur2 = Võlur("Snape", 35, "Tartu", "")
+
+print(võlur1)           # Võluvägi esineb ka __str__ meetodis
+print(võlur2)
+print(võlur1.nõidus()) # Näitab, kuidas Võlur kasutab nõidust
+
+
+
+
+
+
+
+
+
 def juurdekasv(rida, a_juurdekasv):
     # Funktsioon arvutab metsapinna juurdekasvu põhinedes
     # rea väärtusel (aakrite arv) ja aastasel juurdekasvul
