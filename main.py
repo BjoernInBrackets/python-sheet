@@ -1,3 +1,55 @@
+Ülesanne 1. Lasteaia toiduarved (10 p)
+
+
+def loe_failist(fail):
+    toidukorrad = []  # Loome tühja listi, kuhu salvestada iga rea andmed
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            rida = rida.strip()        # Eemaldame iga rea algus- ja lõputühikud
+            if not rida:
+                continue               # Kui rida on tühi, jätame selle vahele
+
+            osad = rida.split(",")    # Jagame rea komadega eraldatud osadeks
+            nimi = osad[0]              # Esimene osa on lapse nimi
+            kuud = [int(x) for x in osad[1:]]  # Ülejäänud osad teisendame int-ideks
+            toidukorrad.append([nimi] + kuud)  # Lisame listi nime ja kuude andmed
+
+    return toidukorrad                     # Tagastame kogutud andmed
+                      
+def arvuta_toiduarve(toidukorrad, nimi, kuud):
+    for rida in toidukorrad:
+        if nimi in rida:           # Kontrollime, kas jaame nime vastavas reas
+           maksumus = sum(rida[1:])  # Summeerime selle lapse kuu- hinnad
+           return maksumus * kuud    # Korrutame summaarilise kuu hinna etteantud kuude arvuga
+     
+    return 0  # Kui nime ei leitud, tagastame 0
+   
+   
+
+def main():
+    #fail = input("Sisesta failinimi: ")
+    toidukorrad = loe_failist("toidukorrad.txt")  # Laeme andmed failist
+    nimi = input("Sisesta lapse nimi: ").capitalize()  # Küsimus kasutajalt nime kohta
+    kuud = int(input("Sisesta ühe toidukorra maksumus: "))  # Ühe kuu maksumus
+    toiduarve = arvuta_toiduarve(toidukorrad, nimi, kuud)  # Arvutame arve
+    print(toiduarve)  # Kuvame tulemuse
+    
+    suurim_arve = 0
+    suurim_laps = None
+    for rida in toidukorrad:
+        nimi = rida[0]  # Iga rea puhul võtame nime
+        maksumus = sum(rida[1:])  # Summeerime kuu hinnad
+        if maksumus > suurim_arve:  # Kui see maksumus on senisest suurem
+            suurim_arve = maksumus
+            suurim_laps = nimi  # Salvestame soorimuse ja nime
+    # Pärast tsüklit trükime kõige suurema arve väärtuse ja lapse nime
+    print(f"Suurim arve on {suurim_arve * kuud} eurot. Lapse nimi on {suurim_laps}.")
+           
+
+if __name__ == "__main__":
+    main()  # Käivitame programmi, kui fail on otse jooksutatud
+
+
 Ülesanne 2. Valimised (10 p)
 
 def loe_info(fail):
