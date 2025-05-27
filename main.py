@@ -126,6 +126,80 @@ print(võlur1.nõidus()) # Näitab, kuidas Võlur kasutab nõidust
 
 
 
+def loe_failist(fail):
+    # Määran tühja listi, kuhu salvestan iga rea alusel autoandmed
+    autod = []
+    # Avan faili lugemiseks UTF-8 kodeeringus
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            # Eemaldan reavahetuse ja tühikud rea algusest ja lõpust
+            rida = rida.strip()
+            # Jagaan rea semikoolonite alusel osadeks: mark ja kuluväärtused
+            osad = rida.split(";")
+            # Esimene osa on autobränd
+            automark = osad[0]
+            # Ülejäänud osad teisendan float-väärtusteks kütusekulu jaoks
+            kütusekulu = [float(x) for x in osad[1:]]
+            # Lisan koos marki ja kütusekuludega ühe kirje listi
+            autod.append([automark] + kütusekulu)
+        # Tagastan valminud kahemõõtmelise listi autode andmetega
+        return autod
+            
+            
+
+def arvuta_keskmine(autod, automark):
+    # Läbin iga auto kirje listis
+    for auto in autod:
+        # Kui marki vastav kirje on leitud
+        if auto[0] == automark:
+            # Võtan välja ainult kütusekulude listi
+            kulud = auto[1:]
+            # Kui kulude list on tühi, tagastan 0.0
+            if not kulud:
+                return 0.0
+            # Arvutan keskmise summa jagatuna arvude arvuga
+            return sum(kulud) / len(kulud)
+    # Kui automarki ei leidu, tagastan 0.0
+    return 0.0
+          
+
+def main():
+    # Küsin kasutajalt faili nime
+    failinimi = input("Sisesta faili nimi: ")
+    # Loe failist autode andmed
+    autod = loe_failist(failinimi)
+    # Küsin keskmise künnise väärtuse float-na
+    lävend = float(input("Sisesta kütusekulu lävend: "))
+    
+    # Prindi autod, mille keskmine kütusekulu on vähemalt lävend
+    print("Lävendi ületanud autod:")
+    for auto in autod:
+        automark = auto[0]
+        keskmine = arvuta_keskmine(autod, automark)
+        if keskmine >= lävend:
+            print(f"{automark}: {keskmine:.2f}")
+    
+    # Leia auto, millel on väikseim keskmine kütusekulu
+    v_am = None          # hoiab automarki
+    v_kk = float('inf')  # hoiab väikseimat keskmist, algul lõpmatu
+    for auto in autod:
+        automark = auto[0]
+        keskmine = arvuta_keskmine(autod, automark)
+        # Kui leitud keskmine on väiksem kui seni leitud
+        if keskmine < v_kk:
+            v_kk = keskmine
+            v_am = automark
+    # Kui vähemalt üks auto oli listis
+    if v_am is not None:        
+        print(f"Vähima keskmise kütusekuluga auto on {v_am}: {v_kk:.2f} liitrit 100 km kohta.")
+    
+
+if __name__ == "__main__":
+    # Käivitan main-funktsiooni, kui skript on otse käivitatud
+    main()
+
+
+
 
 
 
