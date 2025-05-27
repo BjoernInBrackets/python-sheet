@@ -1,3 +1,64 @@
+Ülesanne 2. Valimised (10 p)
+
+def loe_info(fail):
+    info = {}  # siia salvestame iga osariigi andmed
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            rida = rida.strip()        # eemaldame rea algus-/lõputühikud
+            if not rida:
+                continue               # kui rida tühi, vahele jätta
+
+            osad = rida.split(",")    # jagame rea komade järgi osadeks
+            osariik = osad[0]         # esimene osa on osariigi nimi
+
+            # teisendame ülejäänud osad int-ideks ja pakime tupliks
+            hääled = tuple(int(x) for x in osad[1:])
+
+            info[osariik] = hääled    # salvestame sõnastikku
+
+    return info                     # tagastame loetud info
+
+
+def osariikide_võitjad(sõnastik):
+    võitjad = []                    # siia kogume tupleid (kandidaat, valijamehed)
+    for nimi, hääled in sõnastik.items():
+        trump, harris, valijamehed = hääled  # dekomposeerime tupli
+
+        # kui Trump sai rohkem hääli, lisame Trumpi, muidu Harrise
+        if trump > harris:
+            võitjad.append(("Trump", valijamehed))
+        else:
+            võitjad.append(("Harris", valijamehed))
+
+    return võitjad                  # tagastame nimekirja
+
+
+def main():
+    # laeme faili "valimised.txt" kõik andmed
+    sõnastik = loe_info("valimised.txt")
+    võitjad = osariikide_võitjad(sõnastik)
+
+    while True:
+        kanditaat = input("Sisesta kandidaadi nimi (Trump või Harris): ").strip().capitalize()
+        # kontrollime, et sisend on kas "Trump" või "Harris"
+        if kanditaat == "Trump" or kanditaat == "Harris":
+            valijameest = 0
+            for rida in võitjad:
+                if kanditaat in rida:
+                    valijameest += rida[1]
+            # prindime kokkuvõtte
+            print(f"{kanditaat} kogus kokku {valijameest} valijameeste häält.")
+        else:
+            print("Tundmatu kandidaat. Sobivad kandidaadid on Trump ja Harris.")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
 class Sportlane:
     def __init__(self, nimi, kaal):
         # Konstruktor: seadistab sportlase nime ja kaalu
