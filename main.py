@@ -1,3 +1,57 @@
+Ülesanne 1. Vabavisked (10 p)
+
+def loe_failist(fail):
+    vabavisked = []  # Loome tühja listi, kuhu salvestada iga rida failist
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            rida = rida.strip()        # Eemaldame iga rea algus- ja lõputühikud
+            if not rida:
+                continue               # Jätame tühjad read vahele
+
+            osad = rida.split(",")    # Jagame rea komadega eraldatud osadeks
+            nimi = osad[0]              # Esimene osa on sportlase nimi
+            kuud = [int(x) for x in osad[1:]]  # Ülejäänud osad teisendame int-ideks (vabavisked)
+            vabavisked.append([nimi] + kuud)  # Lisame nime ja punktid ühes listis
+
+    return vabavisked  # Tagastame kõigi sportlaste andmed
+
+
+def arvuta_skoor(vabavisked, nimi):
+    for rida in vabavisked:
+        if nimi == rida[0]:          # Leiame antud nimega sportlase rea
+            punktid = rida[1:]       # Eraldame vabavisete tulemused
+            if not punktid:
+                return 0.0           # Kui tulemusi ei ole, tagastame 0.0
+            return sum(punktid) / len(punktid)  # Arvutame keskmise
+    return 0.0  # Kui nime ei leidu, tagastame 0.0
+
+
+def main():
+    # Loeme vabaviske tulemused failist
+    vabavisked = loe_failist("vabavisked.txt")
+    # Küsimus kasutajalt keskmise lävendi kohta
+    lävend = float(input("Sisesta vabavisete keskmise lävend: "))
+    
+    print("Lävendi ületanud sportlased:")  # Pealkiri tulemuste turule
+    parim_m = None      # Parima sportlase nimi
+    suurim_skoor = 0    # Kõrgeima keskmise hoidja
+    # Läbime kõik loetud sportlaste andmed
+    for rida in vabavisked:
+        nimi = rida[0]   # Võtame nime
+        skoor = arvuta_skoor(vabavisked, nimi)  # Arvutame sportlase keskmise
+        if skoor >= lävend:
+            print(f"{nimi}: {skoor:.1f}")  # Kui ületab lävendi, prindime nime ja skoori
+        if skoor > suurim_skoor:
+            suurim_skoor = skoor  # Uuendame kõrgeimat keskmist
+            parim_m = nimi        # Uuendame parima sportlase nime
+    # Lõppkokkuvõte parima sportlase kohta
+    print(f"Parim vabaviskaja on {parim_m} keskmise tabatud vabavisete arvuga {suurim_skoor}.")
+
+
+if __name__ == "__main__":
+    main()  # Käivitame programmi
+
+
 Ülesanne 2. Loomakliinik (10 p)
 
 def loe_loomad(fail):
