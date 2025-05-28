@@ -1,50 +1,52 @@
 Ülesanne 2. Loomakliinik (10 p)
 
 def loe_loomad(fail):
-    loomad = {}  # siia salvestame iga osariigi andmed
+    loomad = {}  # siia salvestame iga looma andmed: nimi -> [liik, viimane_kuu, soovitatud_kuude_vahe]
     with open(fail, "r", encoding="utf-8") as f:
         for rida in f:
-            rida = rida.strip()        # eemaldame rea algus-/lõputühikud
+            rida = rida.strip()        # eemaldame rea algus- ja lõputühikud
             if not rida:
-                continue               # kui rida tühi, vahele jätta
+                continue               # kui rida on tühi, jätame selle vahele
 
-            osad = rida.split(";")    # jagame rea komade järgi osadeks
-            nimi = osad[0]         # esimene osa on osariigi nimi
-            liik = osad[1]
-            # teisendame ülejäänud osad int-ideks ja pakime tupliks
-            
-            kuud =  [int(x) for x in osad[2:]]
-            loomad[nimi] = kuud    # salvestame sõnastikku
-            
-            kuud.insert(0, liik)
-            
-    return loomad                     # tagastame loetud info
-
+            osad = rida.split(";")    # jagame rea semikoolonitega osadeks
+            nimi = osad[0]              # esimene osa: looma nimi
+            liik = osad[1]              # teine osa: looma liik
+            # teisendame ülejäänud osad täisarvudeks (viimane visiidikuu ja soovitatud kuuvahe)
+            kuud = [int(x) for x in osad[2:]]
+            kuud.insert(0, liik)       # lisame liigi listi esimeseks elemendiks
+            loomad[nimi] = kuud         # salvestame nime ja andmed sõnastikku
+    return loomad                   # tagastame loetud info
 
 
 def aeg_visiidini(sõnastik, kuu):
-    visiidini = set()                   # tee tühi set, kuhu add’ime tuple’id
+    visiidini = set()               # kasutame set'i, et koguda unikaalsed (nimi, liik, jäänud_kuud)
     for nimi, väärtus in sõnastik.items():
-        liik = väärtus[0]
-        # summeerime need kaks kuuarvu, mis tuple’is on indeksitel 1 ja 2
-        kuude_summa = sum(int(x) for x in väärtus[1:])
-        # kui soovid arvu, mis jäänud, lahuta sisendkuust
-        jäänud = kuude_summa - kuu
-        ennik = (nimi, liik, jäänud)   # tee tuple
-        visiidini.add(ennik)            # lisa set’i
-    
-    return visiidini 
+        liik = väärtus[0]           # väärtuse 0-ndaks elemendiks on loomaliik
+        # summeerime visiidikuu ja soovitatud vahe: väärtus[1:] on [viimane_kuu, vahe]
+        kuude_summa = sum(väärtus[1:])
+        jäänud = kuude_summa - kuu   # arvutame, mitu kuud on järgmise visiidi ajani
+        ennik = (nimi, liik, jäänud)
+        visiidini.add(ennik)         # lisame tuple'i set'i
+    return visiidini               # tagastame hulga
+
 
 def main():
-    sõnastik = loe_loomad("loomad.txt")
-    kuu = int(input("Sisesta kuu, mis seisuga soovid infot: "))
+    sõnastik = loe_loomad("loomad.txt")  # loeme loomade andmed failist
+    kuu = int(input("Sisesta kuu, mis seisuga soovid infot: "))  # kasutajalt kuu
     visiidini = aeg_visiidini(sõnastik, kuu)
-    print(f"{kuu} kuul on soovitatav tulla visiidile järgmistel loomadel: ")
-    print(visiidini)
-    
-    
+    print(f"{kuu}. kuul on soovitatav tulla visiidile järgmistel loomadel:")
+
+    # prindime iga tuple põhjal nime ja liigi, vajadusel lisame märksõna 'kiire!'
+    for nimi, liik, aeg in visiidini:
+        if aeg == 0:
+            print(f"{liik} {nimi}")
+        elif aeg < 0:
+            print(f"{liik} {nimi} - kiire!")
+
+
 if __name__ == "__main__":
-    main()
+    main()  # programmi käivitamine sisselogitud failiga
+
 
 
 Ülesanne 1. Lasteaia toiduarved (10 p)
