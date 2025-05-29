@@ -1,3 +1,54 @@
+Ülesanne 2. Õpilaste hinded (10 p
+
+def loe_hinded(fail):
+    hinded = {}  # siia salvestame iga looma/õpilase andmed: nimi -> [viimane_kuu, soovitatud_kuuvahe]
+    with open(fail, "r", encoding="utf-8") as f:
+        for rida in f:
+            rida = rida.strip()        # eemaldame rea algus- ja lõputühikud
+            if not rida:
+                continue               # kui rida on tühi, jätame selle vahele
+
+            osad = rida.split(";")    # jagame rea semikoolonitega osadeks
+            nimi = osad[0]              # esimene osa on õpilase nimi
+            # teisendame ülejäänud osad täisarvudeks (hinded)
+            hinne = [int(x) for x in osad[1:]]
+            hinded[nimi] = hinne       # salvestame sõnastikku nime ja hindeid
+    return hinded                   # tagastame sõnastikus kõigi õpilaste hinded
+
+
+def keskmine_hinne(sõnastik):
+    hinded = {}  # siia salvestame iga õpilase keskmise hinde
+    for nimi, hinne_list in sõnastik.items():  # läbin iga õpilase ja tema hinded
+        # arvutan keskmise: kõigi hinnete summa jagatud hindede arvuga
+        keskmine = sum(hinne_list) / len(hinne_list)
+        hinded[nimi] = keskmine  # salvestan keskmise hinne sõnastikku
+    return hinded                # tagastan õpilaste keskmiste hinnete sõnastiku
+    
+
+def main():
+    sõnastik = loe_hinded("hinded.txt")  # loeme failist õpilaste hinded
+    keskmine = keskmine_hinne(sõnastik)    # arvutame hindede keskmised
+    õpilane = input("Sisesta õpilase nimi: ")  # kasutaja sisend
+
+    # kuvame valitud õpilase infot
+    for nimi, hinne in keskmine.items():
+        if õpilane == nimi:  # kui leidub sobiv õpilane
+            print(f"Õpilase {nimi} hinnete keskmine on {hinne}")
+            print(f"Õpilase {nimi} hinded:")
+            järk = 1
+            # siin võiksime kasutada otse sõnastik[õpilane] nimekirja,
+            # aga alljärgnev tsükkel uuesti itereerib kogu sõnastikku
+            for n, h_list in sõnastik.items():
+                if õpilane == n:
+                    for hind in h_list:  # kuvatakse kõik individuaalsed hinded
+                        print(f"{järk}. hinne: {hind}")
+                        järk += 1
+
+
+if __name__ == "__main__":
+    main()  # algatame programmi käivitamise
+
+
 Ülesanne 1. Vabavisked (10 p)
 
 def loe_failist(fail):
