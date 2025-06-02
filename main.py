@@ -1,3 +1,144 @@
+# Märksõnad: faililugemine, sõnastik, punktide töötlemine, keskmine skoor, turniirihaldus
+
+# Funktsioon loeb seisufaili ja tagastab sõnastiku mängijate nimedega ning nende punktidega
+def loe_seis(fail):
+    seis = {}
+    with open(fail, "r", encoding="utf-8") as f:
+        next(f)
+        for rida in f:
+            rida = rida.strip()           # eemalda tühikud ja reavahetus
+            if not rida:
+                continue                  # jäta tühjad read vahele
+
+            osad = rida.split()           # jagame nimeks ja punktideks
+            nimi = osad[0]                # esimene osa = mängija nimi
+            # ülejäänud osad teisendame täisarvudeks ja salvestame listi
+            punktid = [int(x) if x != "-" else "-" for x in osad[1:]]  
+            seis[nimi] = punktid          # lisa sõnastikku
+    return seis
+
+# Funktsioon lisab mängija tulemusvooru, kui see on veel puudu
+def lisa_tulemus(nimi, voor, seis, tulemus):
+    voor = voor - 1
+    if nimi in seis:
+        tegutseja = seis[nimi]
+        if tegutseja[voor] == "-":
+            tegutseja[voor] = tulemus
+            print("Tulemus Lisatud!")
+        else:
+            print("Tulemus on juba lisatud!")
+    else:
+        print("Kasutajat ei Leitud?")
+
+# Funktsioon leiab mängija skoori (summa, jättes vahele puuduvad voorud)
+def leia_skoor(nimi, seis):
+    punktid = seis.get(nimi)
+    if not punktid:
+        print("Mängijat pole!")        # turvalisus, kui nimi puudub
+        return None
+    # Keskmine = punktide summa jagatud arvu elementidega
+    punkt = 0
+    for rida in punktid:
+        if rida == "-":
+            continue
+        else:
+            punkt += rida
+    return punkt
+
+# Funktsioon leiab ja väljastab mängija, kellel on suurim keskmine skoor
+def leia_parim(seis):
+    """
+    Leiab ja väljastab mängija, kellel on suurim keskmine skoor.
+    """
+    if not seis:
+        print("Andmed puuduvad.")
+        return
+
+    parim_nimi = None
+    parim_keskmine = -1.0
+
+    # Käime üle kõik mängijad ja arvutame nende keskmise
+    for nimi in seis:
+        km = leia_skoor(nimi, seis)
+        if km is not None and km > parim_keskmine:
+            parim_keskmine = km
+            parim_nimi = nimi
+
+    print(f"Parim on {parim_nimi} ({parim_keskmine} punkti)")
+
+# Peafunktsioon, mis tegeleb programmi põhivoogudega ning kasutajamenüüga
+def main():
+    fail = "turniir.txt"
+    # 1) Loeme algandmed faili coroutine loe_seis abil
+    seis = loe_seis(fail)
+
+    while True:
+        # 2) Kuvame kasutajale lihtsa menüü
+        
+        print("1 - Vaata punktitabelit")
+        print("2 - Lisa tulemus")
+        print("3 - Vaata skoori")
+        print("4 - leia võitja")
+        print("5 - lõpeta programmi töö")
+        valik = input("Vali tegevus: ").strip()
+
+        if valik == "1":
+            # näitame kõiki mängijaid ja nende punktide read
+            for nimi, punktid in list(seis.items()):
+                print(nimi, *punktid)
+                
+                # VÕI
+                
+                '''
+            for i, (nimi, punktid) in enumerate(seis.items()):
+                if i == 0:
+                    continue
+                print(nimi, *punktid)
+                '''
+
+        elif valik == "2":
+            # küsime nime ja uue punktiliini
+            nimi = input("Sisesta nimi: ").strip().capitalize()
+            voor = int(input("Sisesta voor: ").strip())
+            tulemus = int(input("Sisesta uus tulemus: ").strip())
+            lisa_tulemus(nimi, voor, seis, tulemus)
+
+        elif valik == "3":
+            # küsime nime ja arvutame tema keskmise skoori
+            nimi = input("Sisesta nimi: ").strip().capitalize()
+            km = leia_skoor(nimi, seis)
+            if km is not None:
+                print(f"{nimi} skoor on {km}")
+
+        elif valik == "4":
+            # leiame parima keskmise
+            leia_parim(seis)
+
+        elif valik == "5":
+            # 3) Salvesta muudetud tabel tagasi faili
+            with open(fail, "w", encoding="utf-8") as f:
+                # Kirjutame faili esimeseks rea täpselt päise
+                f.write("     1 2 3 4 5 6\n")
+                # Seejärel kirjutame ülejäänud read (mängijad ja nende punktid)
+                for nimi, punktid in seis.items():
+                    rida = nimi + " " + " ".join(str(x) for x in punktid)
+                    f.write(rida + "\n")
+
+            print("Andmed salvestatud. Programm lõpetab töö.")
+            break
+
+        else:
+            print("Tundmatu valik, proovi uuesti.")
+
+# Kontrollime, kas skript töötab otse, ning käivitame siis peafunktsiooni
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
 Ülesanne 2. Õpilaste hinded (10 p
 
 def loe_hinded(fail):
